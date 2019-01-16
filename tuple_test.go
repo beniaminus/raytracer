@@ -17,6 +17,8 @@ var a,
 	zero,
 	norm tuple.Tuple
 
+var c tuple.Color
+
 func aTuple(arg1, arg2, arg3, arg4 float64) error {
 	a = tuple.New(arg1, arg2, arg3, arg4)
 	return nil
@@ -322,7 +324,72 @@ func dotVAndWEquals(expected float64) error {
 	return nil
 }
 
+func crossVandWEqualsVector(arg1, arg2, arg3 float64) error {
+	var result, expected tuple.Tuple
+
+	result = tuple.Cross(v, w)
+
+	expected = tuple.Vector(arg1, arg2, arg3)
+
+	return isEqual(result, expected)
+}
+
+func crossWandVEqualsVector(arg1, arg2, arg3 float64) error {
+	var result, expected tuple.Tuple
+
+	result = tuple.Cross(w, v)
+
+	expected = tuple.Vector(arg1, arg2, arg3)
+
+	return isEqual(result, expected)
+}
+
+func cColor(red, green, blue float64) error {
+	c = tuple.Color{red, green, blue}
+	return nil
+}
+
+func cRedEquals(expected float64) error {
+	if c.Red != expected {
+		return fmt.Errorf(
+			"expected %f but found %f",
+			expected,
+			c.Red,
+		)
+	}
+
+	return nil
+}
+
+func cGreenEquals(expected float64) error {
+	if c.Green != expected {
+		return fmt.Errorf(
+			"expected %f but found %f",
+			expected,
+			c.Green,
+		)
+	}
+
+	return nil
+}
+
+func cBlueEquals(expected float64) error {
+	if c.Blue != expected {
+		return fmt.Errorf(
+			"expected %f but found %f",
+			expected,
+			c.Blue,
+		)
+	}
+
+	return nil
+}
+
 func FeatureContext(s *godog.Suite) {
+	s.Step(`^c ← color\((\-?\d+\.\d+), (\-?\d+\.\d+), (\-?\d+\.\d+)\)$`, cColor)
+	s.Step(`^c\.red = (\-?\d+\.\d+)$`, cRedEquals)
+	s.Step(`^c\.green = (\-?\d+\.\d+)$`, cGreenEquals)
+	s.Step(`^c\.blue = (\-?\d+\.\d+)$`, cBlueEquals)
 	s.Step(`^a ← tuple\((\d+\.\d+), (\-\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\)$`, aTuple)
 	s.Step(`^a\.x = (\d+\.\d+)$`, ax)
 	s.Step(`^a\.y = (\-\d+\.\d+)$`, ay)
@@ -362,4 +429,6 @@ func FeatureContext(s *godog.Suite) {
 	s.Step(`^v ← vector\((\-?\d+\.\d+), (\-?\d+\.\d+), (\-?\d+\.\d+)\)$`, vVector)
 	s.Step(`^w ← vector\((\-?\d+\.\d+), (\-?\d+\.\d+), (\-?\d+\.\d+)\)$`, wVector)
 	s.Step(`^dot\(v, w\) = (\d+)$`, dotVAndWEquals)
+	s.Step(`^cross\(v, w\) = vector\((\-?\d+\.\d+), (\-?\d+\.\d+), (\-?\d+\.\d+)\)$`, crossVandWEqualsVector)
+	s.Step(`^cross\(w, v\) = vector\((\-?\d+\.\d+), (\-?\d+\.\d+), (\-?\d+\.\d+)\)$`, crossWandVEqualsVector)
 }

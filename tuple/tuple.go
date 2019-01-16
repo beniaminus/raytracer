@@ -13,6 +13,13 @@ type Tuple struct {
 	W float64
 }
 
+// Color is a structure to hold red green and blue values for a pixel.
+type Color struct {
+	Red   float64
+	Green float64
+	Blue  float64
+}
+
 const epsilon = 0.00001
 
 func approximatelyEqual(a, b float64) bool {
@@ -95,4 +102,11 @@ func Normalize(v Tuple) Tuple {
 // Dot returns the product of two vectors
 func Dot(v, w Tuple) float64 {
 	return v.X*w.X + v.Y*w.Y + v.Z*w.Z + v.W*w.W
+}
+
+// Cross returns the result of a cross product between two vectors
+func Cross(v, w Tuple) Tuple {
+	return Vector(v.Y*w.Z-v.Z*w.Y,
+		v.Z*w.X-v.X*w.Z,
+		v.X*w.Y-v.Y*w.X)
 }
